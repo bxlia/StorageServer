@@ -14,15 +14,102 @@ namespace StorageServer
 {
 	public partial class FilesPCForm : Form
 	{
-		public string SavedFilePath { get; private set; }
-		private ListViewItem _showWithCursor = null;
+		public string filePath = " ";
+		private TreeNode lastNode = null;
 		public FilesPCForm()
 		{
 			InitializeComponent();
+			this.Load += FilesPCForm_Load;
 		}
 		private void FilesPCForm_Load(object sender, EventArgs e)
 		{
+			tvFilesPC.Nodes.Clear();
+			string[] drives = Directory.GetLogicalDrives();
 
+			foreach (string drive in drives)
+			{
+				TreeNode driveNode = new TreeNode(drive);
+				driveNode.Tag = drive;
+				driveNode.Nodes.Add(" ");
+				tvFilesPC.Nodes.Add(driveNode);
+			}
+		}
+
+		private void tvFilesPC_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+		{
+			TreeNode currentNode = e.Node;
+			if (currentNode.Tag == null) return;
+
+			currentNode.Nodes.Clear();
+			string currentPath = currentNode.Tag.ToString();
+
+			try
+			{
+				string[] dirs = Directory.GetDirectories(currentPath);
+				foreach (string dir in dirs)
+				{
+					string dirName = Path.GetFileName(dir);
+					TreeNode childDirNode = new TreeNode(dirName);
+					childDirNode.Tag = dir;
+					childDirNode.Nodes.Add(" ");
+					currentNode.Nodes.Add(childDirNode);
+				}
+
+				string[] files = Directory.GetFiles(currentPath);
+				foreach (string file in files)
+				{
+					string fileName = Path.GetFileName(file);
+					TreeNode fileNode = new TreeNode(fileName);
+					fileNode.Tag = file;
+					fileNode.ToolTipText = fileName;
+					currentNode.Nodes.Add(fileNode);
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+		}
+
+		private void SelectedToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			TreeNode selectedNode = tvFilesPC.SelectedNode;
+			if (selectedNode == null) return;
+
+			if (lastNode != null)
+			{
+				lastNode.BackColor = Color.Empty;
+				lastNode.ForeColor = Color.Empty;
+			}
+
+			selectedNode.BackColor = SystemColors.Highlight;
+			selectedNode.ForeColor = Color.White;
+
+			filePath = selectedNode.Tag.ToString();
+			lastNode = selectedNode;
+		}
+
+		private void EditToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			TreeNode selectedNode = tvFilesPC.SelectedNode;
+			if (selectedNode == null) return;
+
+			string filePath = selectedNode.Tag.ToString();
+			MessageBox.Show("Edit file: " + filePath);
+		}
+
+		private void tvFilesPC_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				tvFilesPC.SelectedNode = e.Node;
+				string path = e.Node.Tag.ToString();
+
+				if (!Directory.Exists(path) && File.Exists(path))
+				{
+					cmsFilesPC.Show(Cursor.Position);
+				}
+			}
 		}
 	}
 }
