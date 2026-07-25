@@ -93,9 +93,15 @@ namespace StorageServer
 		{
 			TreeNode selectedNode = tvFilesPC.SelectedNode;
 			if (selectedNode == null) return;
-
-			string filePath = selectedNode.Tag.ToString();
-			MessageBox.Show("Edit file: " + filePath);
+			try
+			{
+				string filePath = selectedNode.Tag.ToString();
+				System.Diagnostics.Process.Start("notepad++.exe", filePath);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
 		}
 
 		private void tvFilesPC_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

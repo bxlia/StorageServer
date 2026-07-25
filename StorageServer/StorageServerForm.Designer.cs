@@ -61,20 +61,26 @@
 			// tbUrl
 			// 
 			this.tbUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.tbUrl.ForeColor = System.Drawing.Color.Gray;
 			this.tbUrl.Location = new System.Drawing.Point(183, 67);
 			this.tbUrl.Name = "tbUrl";
 			this.tbUrl.Size = new System.Drawing.Size(1100, 49);
 			this.tbUrl.TabIndex = 2;
 			this.tbUrl.Text = "Введите URL-адрес...";
+			this.tbUrl.Enter += new System.EventHandler(this.tbUrl_Enter);
+			this.tbUrl.Leave += new System.EventHandler(this.tbUrl_Leave);
 			// 
 			// tbApiKey
 			// 
 			this.tbApiKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.tbApiKey.ForeColor = System.Drawing.Color.Gray;
 			this.tbApiKey.Location = new System.Drawing.Point(183, 177);
 			this.tbApiKey.Name = "tbApiKey";
 			this.tbApiKey.Size = new System.Drawing.Size(1100, 49);
 			this.tbApiKey.TabIndex = 3;
 			this.tbApiKey.Text = "Введите API-ключ...";
+			this.tbApiKey.Enter += new System.EventHandler(this.tbApiKey_Enter);
+			this.tbApiKey.Leave += new System.EventHandler(this.tbApiKey_Leave);
 			// 
 			// btnSend
 			// 
@@ -85,6 +91,7 @@
 			this.btnSend.TabIndex = 4;
 			this.btnSend.Text = "Отправить";
 			this.btnSend.UseVisualStyleBackColor = true;
+			this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
 			// 
 			// btnCheck
 			// 
@@ -95,6 +102,7 @@
 			this.btnCheck.TabIndex = 5;
 			this.btnCheck.Text = "Проверка сети";
 			this.btnCheck.UseVisualStyleBackColor = true;
+			this.btnCheck.Click += new System.EventHandler(this.btnCheck_Click);
 			// 
 			// StorageServerForm
 			// 
