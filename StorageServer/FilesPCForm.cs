@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Форма ПК 
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,6 +23,8 @@ namespace StorageServer
 			InitializeComponent();
 			this.Load += FilesPCForm_Load;
 		}
+
+		// Подключение драйверов ПК
 		private void FilesPCForm_Load(object sender, EventArgs e)
 		{
 			tvFilesPC.Nodes.Clear();
@@ -35,16 +39,17 @@ namespace StorageServer
 			}
 		}
 
+		// Загрузка Папок и Файлов ПК
 		private void tvFilesPC_BeforeExpand(object sender, TreeViewCancelEventArgs e)
 		{
 			TreeNode currentNode = e.Node;
 			if (currentNode.Tag == null) return;
-
 			currentNode.Nodes.Clear();
 			string currentPath = currentNode.Tag.ToString();
 
 			try
 			{
+				// Загрузка Папок ПК
 				string[] dirs = Directory.GetDirectories(currentPath);
 				foreach (string dir in dirs)
 				{
@@ -55,6 +60,7 @@ namespace StorageServer
 					currentNode.Nodes.Add(childDirNode);
 				}
 
+				// Загрузка Файлов ПК
 				string[] files = Directory.GetFiles(currentPath);
 				foreach (string file in files)
 				{
@@ -71,24 +77,17 @@ namespace StorageServer
 			}
 		}
 
+		// Выбор Добавить в панеле инструментов
 		private void SelectedToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode selectedNode = tvFilesPC.SelectedNode;
 			if (selectedNode == null) return;
 
-			if (lastNode != null)
-			{
-				lastNode.BackColor = Color.Empty;
-				lastNode.ForeColor = Color.Empty;
-			}
-
-			selectedNode.BackColor = SystemColors.Highlight;
-			selectedNode.ForeColor = Color.White;
-
 			filePath = selectedNode.Tag.ToString();
 			lastNode = selectedNode;
 		}
 
+		// Выбор Редактировать в панеле инструментов
 		private void EditToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode selectedNode = tvFilesPC.SelectedNode;
@@ -96,7 +95,7 @@ namespace StorageServer
 			try
 			{
 				string filePath = selectedNode.Tag.ToString();
-				System.Diagnostics.Process.Start("notepad++.exe", filePath);
+				System.Diagnostics.Process.Start("notepad++.exe", filePath); // Открытие дефолтного приложения-редактора
 			}
 			catch (Exception ex)
 			{
@@ -104,6 +103,7 @@ namespace StorageServer
 			}
 		}
 
+		// Открыть Панель инструментов (ПКМ по тексту)
 		private void tvFilesPC_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
 			if (e.Button == MouseButtons.Right)

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Главная форма
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +17,7 @@ namespace StorageServer
 {
 	public partial class StorageServerForm : Form
 	{
+		//private FilesServerForm frmServer = new FilesServerForm();
 		//private FilesPCForm fPCForm = new FilesPCForm();
 		private FilesPCForm _filesPCWindow;
 		private FilesServerForm _filesServerWindow;
@@ -22,17 +25,20 @@ namespace StorageServer
 		public StorageServerForm()
 		{
 			InitializeComponent();
+			tbUrl.Text = "94.41.17.13:25565"; // Автоматически в поле ввода
+			tbApiKey.Text = "bxlia_api_v0_6b4b4abcdefg1234567"; // Автоматически в поле ввода
 		}
 
-		// 1. Общий метод для парсинга адреса (используем кортеж для возврата двух значений)
+		// Парсинг адреса
 		private (string ip, int port) ParseUrl()
 		{
 			string[] urlAdress = tbUrl.Text.Split(':');
-			string ip = urlAdress[0];
-			int port = int.Parse(urlAdress[1]);
+			string ip = urlAdress[0]; // Адрес
+			int port = int.Parse(urlAdress[1]); // Порт
 			return (ip, port);
 		}
 
+		// Кнопка открытия хранилища ПК
 		private void btnOpenPC_Click(object sender, EventArgs e)
 		{
 			if (this._filesPCWindow == null)
@@ -50,6 +56,7 @@ namespace StorageServer
 			}
 		}
 
+		// Кнопка открытия хранилища Сервера
 		private void btnOpenServer_Click(object sender, EventArgs e)
 		{
 			if (this._filesServerWindow == null)
@@ -67,31 +74,28 @@ namespace StorageServer
 			}
 		}
 
-		private void btnSend_Click(object sender, EventArgs e)
+
+		// Подключаем Клиент к Серверу
+		private void btnCheck_Click(object sender, EventArgs e)
 		{
 			try
 			{
-				string path = _filesPCWindow.filePath;
-				string name = Path.GetFileName(path);
-				byte[] data = File.ReadAllBytes(path);
-
 				var server = ParseUrl();
+				System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
+				info.FileName = "ClientStorageServer.exe";
+				info.Arguments = $"{server.ip} {server.port} {tbApiKey.Text} PING";
+				info.RedirectStandardOutput = true;
+				info.UseShellExecute = false;
+				info.CreateNoWindow = true;
 
-				using (TcpClient client = new TcpClient(server.ip, server.port))
+				using (System.Diagnostics.Process proc = System.Diagnostics.Process.Start(info))
 				{
-					using (NetworkStream stream = client.GetStream())
-					{
-						StreamWriter writer = new StreamWriter(stream);
-						writer.WriteLine(tbApiKey.Text); 
-						writer.WriteLine(name);         
-						writer.Flush();
+					string response = proc.StandardOutput.ReadToEnd();
+					proc.WaitForExit();
 
-						stream.Write(data, 0, data.Length);
-						stream.Flush();
-					}
+					if (proc.ExitCode == 0) MessageBox.Show("Ответ сервера: " + response);
+					else MessageBox.Show("Не удалось подключиться к серверу.");
 				}
-
-				MessageBox.Show("Отправлено через сокет!");
 			}
 			catch (Exception ex)
 			{
@@ -99,37 +103,35 @@ namespace StorageServer
 			}
 		}
 
-		private void btnCheck_Click(object sender, EventArgs e)
+		// Отправка Файлов через Сокет
+		private void btnSend_Click(object sender, EventArgs e)
 		{
 			try
 			{
+				string path = _filesPCWindow.filePath;
+				string name = Path.GetFileName(path);
 				var server = ParseUrl();
 
-				// Открываем прямое TCP-подключение
-				using (TcpClient client = new TcpClient(server.ip, server.port))
+				System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
+				info.FileName = "ClientStorageServer.exe";
+				info.Arguments = $"{server.ip} {server.port} {tbApiKey.Text} \"{name}\" \"{path}\"";
+				info.UseShellExecute = false;
+				info.CreateNoWindow = true;
+
+				using (System.Diagnostics.Process proc = System.Diagnostics.Process.Start(info))
 				{
-					using (NetworkStream stream = client.GetStream())
-					{
-						StreamWriter writer = new StreamWriter(stream);
-						StreamReader reader = new StreamReader(stream);
-
-						// Отправляем API-ключ и команду проверки
-						writer.WriteLine(tbApiKey.Text);
-						writer.WriteLine("PING");
-						writer.Flush();
-
-						// Считываем мгновенный ответ от сервера
-						string response = reader.ReadLine();
-						MessageBox.Show("Ответ сервера: " + response);
-					}
+					proc.WaitForExit();
+					if (proc.ExitCode == 0) MessageBox.Show("Файл передан через сокет!");
+					else MessageBox.Show("Ошибка передачи файла.");
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Сервер недоступен: " + ex.Message);
+				MessageBox.Show(ex.Message);
 			}
 		}
 
+		// Визуал полей ввода
 		private void tbUrl_Enter(object sender, EventArgs e)
 		{
 			if (tbUrl.Text == "Введите URL-адрес...")
@@ -144,6 +146,7 @@ namespace StorageServer
 			if (string.IsNullOrWhiteSpace(tbUrl.Text))
 			{
 				tbUrl.Text = "Введите URL-адрес...";
+				tbUrl.ForeColor = SystemColors.GrayText;
 			}
 		}
 
@@ -161,7 +164,9 @@ namespace StorageServer
 			if (string.IsNullOrWhiteSpace(tbApiKey.Text))
 			{
 				tbApiKey.Text = "Введите API-ключ...";
+				tbApiKey.ForeColor = SystemColors.GrayText;
 			}
 		}
+
 	}
 }
