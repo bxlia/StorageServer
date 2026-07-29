@@ -1,5 +1,6 @@
 ﻿// Главная форма
 
+using StorageServer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,6 +28,7 @@ namespace StorageServer
 			InitializeComponent();
 			tbUrl.Text = "94.41.17.13:25565"; // Автоматически в поле ввода
 			tbApiKey.Text = "bxlia_api_v0_6b4b4abcdefg1234567"; // Автоматически в поле ввода
+			Console.SetOut(new ControlWriter(tbLog));
 		}
 
 		// Парсинг адреса
@@ -37,6 +39,14 @@ namespace StorageServer
 			int port = int.Parse(urlAdress[1]); // Порт
 			return (ip, port);
 		}
+
+		// Отчитывание время сообщение в логе
+		private void Log(string message)
+		{
+			tbLog.AppendText($"[{DateTime.Now:HH:mm:ss}] {message}{Environment.NewLine}");
+		}
+
+
 
 		// Кнопка открытия хранилища ПК
 		private void btnOpenPC_Click(object sender, EventArgs e)
@@ -81,8 +91,12 @@ namespace StorageServer
 			try
 			{
 				var server = ParseUrl();
+
+				// Пишем обычный Console.WriteLine — текст сам улетит в tbLogStorageServerForm
+				Console.WriteLine($"Связь: {server.ip}:{server.port}");
+
 				System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
-				info.FileName = "ClientStorageServer.exe";
+				info.FileName = "ClientNetwork.exe";
 				info.Arguments = $"{server.ip} {server.port} {tbApiKey.Text} PING";
 				info.RedirectStandardOutput = true;
 				info.UseShellExecute = false;
@@ -90,15 +104,24 @@ namespace StorageServer
 
 				using (System.Diagnostics.Process proc = System.Diagnostics.Process.Start(info))
 				{
-					string response = proc.StandardOutput.ReadToEnd();
+					string res = proc.StandardOutput.ReadToEnd();
 					proc.WaitForExit();
 
-					if (proc.ExitCode == 0) MessageBox.Show("Ответ сервера: " + response);
-					else MessageBox.Show("Не удалось подключиться к серверу.");
+					if (proc.ExitCode == 0)
+					{
+						Console.WriteLine("Ответ: " + res);
+						MessageBox.Show("Ответ сервера: " + res);
+					}
+					else
+					{
+						Console.WriteLine("Ошибка подключения");
+						MessageBox.Show("Не удалось подключиться к серверу");
+					}
 				}
 			}
 			catch (Exception ex)
 			{
+				Console.WriteLine(ex.Message);
 				MessageBox.Show(ex.Message);
 			}
 		}
@@ -112,22 +135,34 @@ namespace StorageServer
 				string name = Path.GetFileName(path);
 				var server = ParseUrl();
 
+				Console.WriteLine($"Файл: {name}");
+
 				System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
-				info.FileName = "ClientStorageServer.exe";
+				info.FileName = "ClientNetwork.exe";
 				info.Arguments = $"{server.ip} {server.port} {tbApiKey.Text} \"{name}\" \"{path}\"";
 				info.UseShellExecute = false;
 				info.CreateNoWindow = true;
 
+				Console.WriteLine("Отправка сокетом...");
+
 				using (System.Diagnostics.Process proc = System.Diagnostics.Process.Start(info))
 				{
 					proc.WaitForExit();
-					if (proc.ExitCode == 0) MessageBox.Show("Файл передан через сокет!");
-					else MessageBox.Show("Ошибка передачи файла.");
+					if (proc.ExitCode == 0)
+					{
+						Console.WriteLine("Успешно отправлено");
+						MessageBox.Show("Файл успешно передан через C++ сокет!");
+					}
+					else
+					{
+						Console.WriteLine("Ошибка передачи");
+						MessageBox.Show("Ошибка передачи файла.");
+					}
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message);
+				Console.WriteLine(ex.Message);
 			}
 		}
 
@@ -167,6 +202,17 @@ namespace StorageServer
 				tbApiKey.ForeColor = SystemColors.GrayText;
 			}
 		}
-
 	}
 }
+
+public class ControlWriter : System.IO.TextWriter
+{
+	private TextBox _box;
+	public ControlWriter(TextBox box) { _box = box; }
+	public override void WriteLine(string value)
+	{
+		_box.AppendText($"[{DateTime.Now:HH:mm:ss}] {value}{Environment.NewLine}");
+	}
+	public override System.Text.Encoding Encoding => System.Text.Encoding.UTF8;
+}
+

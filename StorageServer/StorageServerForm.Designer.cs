@@ -34,6 +34,7 @@
 			this.tbApiKey = new System.Windows.Forms.TextBox();
 			this.btnSend = new System.Windows.Forms.Button();
 			this.btnCheck = new System.Windows.Forms.Button();
+			this.tbLog = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// btnOpenPC
@@ -104,11 +105,24 @@
 			this.btnCheck.UseVisualStyleBackColor = true;
 			this.btnCheck.Click += new System.EventHandler(this.btnCheck_Click);
 			// 
+			// tbLog
+			// 
+			this.tbLog.BackColor = System.Drawing.Color.DarkGray;
+			this.tbLog.ForeColor = System.Drawing.Color.DeepSkyBlue;
+			this.tbLog.Location = new System.Drawing.Point(183, 403);
+			this.tbLog.Multiline = true;
+			this.tbLog.Name = "tbLog";
+			this.tbLog.ReadOnly = true;
+			this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.tbLog.Size = new System.Drawing.Size(1100, 517);
+			this.tbLog.TabIndex = 6;
+			// 
 			// StorageServerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1474, 1029);
+			this.Controls.Add(this.tbLog);
 			this.Controls.Add(this.btnCheck);
 			this.Controls.Add(this.btnSend);
 			this.Controls.Add(this.tbApiKey);
@@ -131,6 +145,7 @@
 		private System.Windows.Forms.TextBox tbApiKey;
 		private System.Windows.Forms.Button btnSend;
 		private System.Windows.Forms.Button btnCheck;
+		private System.Windows.Forms.TextBox tbLog;
 	}
 }
 
