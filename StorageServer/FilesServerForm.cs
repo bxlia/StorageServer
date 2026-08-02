@@ -36,6 +36,12 @@ namespace StorageServer
 			rootNode.Expand();
 		}
 
+		public void UpdateTree()
+		{
+			FilesServerForm_Load(this, EventArgs.Empty);
+		}
+
+
 		// Загрузка Папок и Файлов Сервера
 		private void tvFilesServer_BeforeExpand(object sender, TreeViewCancelEventArgs e)
 		{
@@ -108,6 +114,8 @@ namespace StorageServer
 				cmsFilesServer.Show(Cursor.Position);
 			}
 		}
+
+		
 
 
 	}

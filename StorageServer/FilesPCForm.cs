@@ -39,6 +39,12 @@ namespace StorageServer
 			}
 		}
 
+		public void UpdateTree()
+		{
+			FilesPCForm_Load(this, EventArgs.Empty);
+		}
+
+
 		// Загрузка Папок и Файлов ПК
 		private void tvFilesPC_BeforeExpand(object sender, TreeViewCancelEventArgs e)
 		{
@@ -118,4 +124,5 @@ namespace StorageServer
 			}
 		}
 	}
+
 }

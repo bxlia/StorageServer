@@ -1,17 +1,8 @@
 ﻿// Главная форма
 
-using StorageServer;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace StorageServer
@@ -135,11 +126,13 @@ namespace StorageServer
 				string name = Path.GetFileName(path);
 				var server = ParseUrl();
 
-				Console.WriteLine($"Файл: {name}");
+				// Получаем размер файла
+				long size = new FileInfo(path).Length;
+				Console.WriteLine($"Файл: {name} ({size} байт)");
 
 				System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
 				info.FileName = "ClientNetwork.exe";
-				info.Arguments = $"{server.ip} {server.port} {tbApiKey.Text} \"{name}\" \"{path}\"";
+				info.Arguments = $"{server.ip} {server.port} {tbApiKey.Text} \"{name}\" \"{path}\" {size}";
 				info.UseShellExecute = false;
 				info.CreateNoWindow = true;
 
@@ -152,6 +145,7 @@ namespace StorageServer
 					{
 						Console.WriteLine("Успешно отправлено");
 						MessageBox.Show("Файл успешно передан через C++ сокет!");
+						if (_filesServerWindow != null) _filesServerWindow.UpdateTree();
 					}
 					else
 					{
@@ -159,6 +153,20 @@ namespace StorageServer
 						MessageBox.Show("Ошибка передачи файла.");
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				MessageBox.Show(ex.Message);
+			}
+		}
+		private void ts_btnUpdate_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				if (_filesPCWindow != null) _filesPCWindow.UpdateTree();
+				if (_filesServerWindow != null) _filesServerWindow.UpdateTree();
+				Console.WriteLine("Все файловые структуры успешно обновлены");
 			}
 			catch (Exception ex)
 			{
@@ -202,6 +210,7 @@ namespace StorageServer
 				tbApiKey.ForeColor = SystemColors.GrayText;
 			}
 		}
+
 	}
 }
 

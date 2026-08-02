@@ -61,14 +61,14 @@
 			// выбратьToolStripMenuItem
 			// 
 			this.выбратьToolStripMenuItem.Name = "выбратьToolStripMenuItem";
-			this.выбратьToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+			this.выбратьToolStripMenuItem.Size = new System.Drawing.Size(250, 38);
 			this.выбратьToolStripMenuItem.Text = "Выбрать";
 			this.выбратьToolStripMenuItem.Click += new System.EventHandler(this.SelectedToolStripMenuItem_Click);
 			// 
 			// редактироватьToolStripMenuItem
 			// 
 			this.редактироватьToolStripMenuItem.Name = "редактироватьToolStripMenuItem";
-			this.редактироватьToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+			this.редактироватьToolStripMenuItem.Size = new System.Drawing.Size(250, 38);
 			this.редактироватьToolStripMenuItem.Text = "Редактировать";
 			this.редактироватьToolStripMenuItem.Click += new System.EventHandler(this.EditToolStripMenuItem_Click);
 			// 
