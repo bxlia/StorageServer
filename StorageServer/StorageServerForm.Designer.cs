@@ -38,6 +38,8 @@
 			this.tbLog = new System.Windows.Forms.TextBox();
 			this.tsPanel = new System.Windows.Forms.ToolStrip();
 			this.ts_btnUpdate = new System.Windows.Forms.ToolStripButton();
+			this.ts_tbSearch = new System.Windows.Forms.ToolStripTextBox();
+			this.ts_btnSearch = new System.Windows.Forms.ToolStripButton();
 			this.tsPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -111,8 +113,8 @@
 			// 
 			// tbLog
 			// 
-			this.tbLog.BackColor = System.Drawing.Color.DarkGray;
-			this.tbLog.ForeColor = System.Drawing.Color.DeepSkyBlue;
+			this.tbLog.BackColor = System.Drawing.Color.Black;
+			this.tbLog.ForeColor = System.Drawing.Color.CornflowerBlue;
 			this.tbLog.Location = new System.Drawing.Point(183, 436);
 			this.tbLog.Multiline = true;
 			this.tbLog.Name = "tbLog";
@@ -125,7 +127,9 @@
 			// 
 			this.tsPanel.ImageScalingSize = new System.Drawing.Size(32, 32);
 			this.tsPanel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ts_btnUpdate});
+            this.ts_btnUpdate,
+            this.ts_tbSearch,
+            this.ts_btnSearch});
 			this.tsPanel.Location = new System.Drawing.Point(0, 0);
 			this.tsPanel.Name = "tsPanel";
 			this.tsPanel.Size = new System.Drawing.Size(1474, 42);
@@ -142,6 +146,22 @@
 			this.ts_btnUpdate.Text = "Обновить";
 			this.ts_btnUpdate.ToolTipText = "Обновить";
 			this.ts_btnUpdate.Click += new System.EventHandler(this.ts_btnUpdate_Click);
+			// 
+			// ts_tbSearch
+			// 
+			this.ts_tbSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
+			this.ts_tbSearch.Name = "ts_tbSearch";
+			this.ts_tbSearch.Size = new System.Drawing.Size(100, 42);
+			// 
+			// ts_btnSearch
+			// 
+			this.ts_btnSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.ts_btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("ts_btnSearch.Image")));
+			this.ts_btnSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ts_btnSearch.Name = "ts_btnSearch";
+			this.ts_btnSearch.Size = new System.Drawing.Size(86, 36);
+			this.ts_btnSearch.Text = "Поиск";
+			this.ts_btnSearch.Click += new System.EventHandler(this.ts_btnSearch_Click);
 			// 
 			// StorageServerForm
 			// 
@@ -177,6 +197,8 @@
 		private System.Windows.Forms.TextBox tbLog;
 		private System.Windows.Forms.ToolStrip tsPanel;
 		private System.Windows.Forms.ToolStripButton ts_btnUpdate;
+		private System.Windows.Forms.ToolStripTextBox ts_tbSearch;
+		private System.Windows.Forms.ToolStripButton ts_btnSearch;
 	}
 }
 

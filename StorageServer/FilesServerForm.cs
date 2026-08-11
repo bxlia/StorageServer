@@ -43,7 +43,7 @@ namespace StorageServer
 
 
 		// Загрузка Папок и Файлов Сервера
-		private void tvFilesServer_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+		public void tvFilesServer_BeforeExpand(object sender, TreeViewCancelEventArgs e)
 		{
 			TreeNode curr = e.Node;
 			if (curr.Tag == null) return;

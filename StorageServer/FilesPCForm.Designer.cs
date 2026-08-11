@@ -88,10 +88,9 @@
 		}
 
 		#endregion
-
-		private System.Windows.Forms.TreeView tvFilesPC;
 		private System.Windows.Forms.ContextMenuStrip cmsFilesPC;
 		private System.Windows.Forms.ToolStripMenuItem выбратьToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem редактироватьToolStripMenuItem;
+		public System.Windows.Forms.TreeView tvFilesPC;
 	}
 }

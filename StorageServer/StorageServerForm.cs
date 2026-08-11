@@ -31,7 +31,7 @@ namespace StorageServer
 			return (ip, port);
 		}
 
-		// Отчитывание время сообщение в логе
+		// Отчитывание времени сообщением в логе
 		private void Log(string message)
 		{
 			tbLog.AppendText($"[{DateTime.Now:HH:mm:ss}] {message}{Environment.NewLine}");
@@ -161,7 +161,7 @@ namespace StorageServer
 			}
 		}
 		private void ts_btnUpdate_Click(object sender, EventArgs e)
-		{
+		{        
 			try
 			{
 				if (_filesPCWindow != null) _filesPCWindow.UpdateTree();
@@ -172,6 +172,11 @@ namespace StorageServer
 			{
 				Console.WriteLine(ex.Message);
 			}
+		}
+
+		private void ts_btnSearch_Click(object sender, EventArgs e)
+		{
+			string txt = ts_tbSearch.Text.ToLower();
 		}
 
 		// Визуал полей ввода
