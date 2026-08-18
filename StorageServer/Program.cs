@@ -11,6 +11,10 @@ namespace StorageServer
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
+		/// 
+		public static string SelectedLocalFilePath = " ";
+		public static string SelectedRemoteFolderPath = "/home/zizik";
+
 		[STAThread]
 		static void Main()
 		{
